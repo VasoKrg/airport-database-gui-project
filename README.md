@@ -57,4 +57,11 @@ Aliki Panou
 
 Developed as part of the University of Patras – Electrical & Computer Engineering
 
+## Requirements
+Python 3.5+
+
+PyQt5: pip install PyQt5
+
+SQLite or DB Browser for SQLite
+
 Note: This repo includes the core controller logic. Some auxiliary UI modules were part of the original project but are not included here for brevity.
