@@ -1,17 +1,19 @@
-'''Δημιουργία γραφικής διεπαφής και εφαρμογής αεροδρομίου'''
+'''AIRPORT DATABASE APP AND GUI'''
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sqlite3
 import time
-from insert_aircraft3 import Ui_InsertAircraftWindow
-from delete_aicraft5 import Ui_Delete_Aircraft
-from update_airline import Ui_update_airline
-from insert_airline import Ui_insert_airline
-from delete_airline import Ui_Delete_Airline
-from update_scheduled_flight import Ui_MainWindow2
-from insert_scheduled import Ui_MainWindow5
-from delete_scheduled import Ui_MainWindow20
-from update_flight import Ui_Flight
+
+#Modules omitted for GitHub demo
+# from insert_aircraft3 import Ui_InsertAircraftWindow
+# from delete_aicraft5 import Ui_Delete_Aircraft
+# from update_airline import Ui_update_airline
+# from insert_airline import Ui_insert_airline
+# from delete_airline import Ui_Delete_Airline
+# from update_scheduled_flight import Ui_MainWindow2
+# from insert_scheduled import Ui_MainWindow5
+# from delete_scheduled import Ui_MainWindow20
+# from update_flight import Ui_Flight
 
 import datetime
 
@@ -124,7 +126,7 @@ class Ui_MainWindow(object):
         self.update_flight_window.show()
     
 
-    #Μέθοδοι που βάζουν Items στα comboBoxes των παραθύρων insert, update, delete
+    #Methods that put Items in the comboBoxes of the insert, update, delete windows
     def setAircraftValues(self):
         if (self.delete_aircraft_ui.filter.currentText() == "ID"):
             sql1 = "select ID from AIRCRAFT"
@@ -336,7 +338,7 @@ class Ui_MainWindow(object):
             self.insert_scheduled_flight_ui.origin_airport.setCurrentText("LAX")
 
 
-    #Στήσιμο της διεπαφής   
+    #Setting up the interface  
     def setupUi(self, MainWindow):
 
         self.stylesheet = '''
@@ -714,8 +716,8 @@ class Ui_MainWindow(object):
                     self.update_flight_ui.update.clicked.connect(self.update_flight)
 
 
-    #Οι μέθοδοι που ακολουθούν αναφέρονται στις λειτουργίες insert, update, delete της 3ης καρτέλας
-    #Ανάλογα το input του χρήστη στα διάφορα widgets δημιουργούν τις κατάλληλες εντολές SQL και τις τρέχουν
+    #The following methods refer to the insert, update, delete functions of the 3rd tab
+    #Depending on the user input, the various widgets create the appropriate SQL commands and executes them
     def update_flight(self):
         flight_num =  self.update_flight_ui.flight_number.currentText()
         sql = "select * from ACTUAL_FLIGHT where Flight_Number = ?"
@@ -1067,9 +1069,9 @@ class Ui_MainWindow(object):
                 self.results.setItem(i,j,QtWidgets.QTableWidgetItem(str(results[i][j])))
         self.results.show()
      
-    #Δημιουργία και εκτέλεση των Queries Departures, Arrivals     
+    #Creation and execution of Departures, Arrivals Queries
     def execute_table_query(self):
-        #Query που επιστρέφει τον πίνακα Αναχωρήσεων της ημέρας 2021-01-04
+        #Query that returns the Departures table for the day 2021-01-04
         dep_query = f'''SELECT AIRPORT.City, Flight.Destination_Airport, AIRLINE.NAME as Airline_Name, Flight_Number, Gate, group_concat(counter_id,' ') as Check_in,
         datetime(ACTUAL_FLIGHT.date, SCHEDULED.Departure) as Date_scheduled_time, time(ACTUAL_FLIGHT.Departure) as Actual_or_Estimated_Departure, Flight.Status
         
@@ -1081,7 +1083,7 @@ class Ui_MainWindow(object):
         group by Flight_Number
         order by Date_scheduled_time;'''
         
-        #Query που επιστρέφει τον πίνακα Αφίξεων της ημέρας 2021-01-04 
+        #Query that returns the Arrivals table for the day 2021-01-04
         arr_query = f'''SELECT AIRPORT.City, Flight.Origin_Airport, AIRLINE.NAME as Airline_Name, Flight_Number, datetime(ACTUAL_FLIGHT.date, SCHEDULED.Arrival) as Date_scheduled_time,
         time(ACTUAL_FLIGHT.Arrival) as Actual_or_Estimated_Arrival, Flight.Status
         FROM  (ACTUAL_FLIGHT JOIN SCHEDULED_FLIGHT as SCHEDULED on Scheduled_Flight_Number=FlightNumber) as Flight, AIRPORT, AIRLINE
@@ -1099,7 +1101,7 @@ class Ui_MainWindow(object):
         return query_res
     
 
-    #Εηνημέρωση των εγγραφών του tableWidget στην καρτέλα Flights                
+    #Updating tableWidget records in the Flights tab           
     def departures_arrivals_clicked(self,table):
         if (table == "DEPARTURES"):
             self.options["type"] = "DEPARTURES"
@@ -1113,7 +1115,7 @@ class Ui_MainWindow(object):
         else:
             self.AddTable(query_res)
             
-    #Εηνημέρωση των εγγραφών του tableWidget στην καρτέλα Flights
+    #Updating tableWidget records in the Flights tab
     def Airline_Clicked(self):
         
         content = self.airlines.currentText()
@@ -1126,7 +1128,7 @@ class Ui_MainWindow(object):
         else:
             self.AddTable(query_res)
 
-    #Εηνημέρωση των εγγραφών του tableWidget στην καρτέλα Flights            
+    #Updating tableWidget records in the Flights tab            
     def Airport_Clicked(self):
         
         content = self.airport.currentText()
@@ -1139,11 +1141,11 @@ class Ui_MainWindow(object):
         else:
             self.AddTable(query_res)
 
-    #Εμφάνιση Error Message
+    #Show Error Message
     def Error_Pop(self):
         error_dialog = QtWidgets.QErrorMessage()
 
-    #Εηνημέρωση των εγγραφών του tableWidget στην καρτέλα Flights      
+    #Updating tableWidget records in the Flights tab     
     def Select_Fnumber(self):
         content = self.flight_number.text()
         try:
@@ -1160,7 +1162,7 @@ class Ui_MainWindow(object):
             else:
                 self.AddTable(query_res)
                 
-        #Αν ο χρήστης πληκτρολογήσει εσφαλμένο χαρακτήρα εμφάνισε μήνυμα λάθους
+        #If the user enters an incorrect character, display an error message
         except BaseException:
             self.tableWidget.setRowCount(0)
             self.tableWidget.setColumnCount(0)
@@ -1169,7 +1171,7 @@ class Ui_MainWindow(object):
             
                     
    
-    #Ενημέρωση του QTableWidget με τις τιμές των Queries
+    #Updating the QTableWidget with the Queries values
     def AddTable(self, query):
         row_count = (len(query))
         column_count = (len(query[0]))
@@ -1201,15 +1203,15 @@ class Ui_MainWindow(object):
             
 
 class DataModel():
-    '''Κλάση σύνδεσης με τη βάση δεδομένων και δημιουργίας δρομέα'''
+    '''Database connection and cursor creation class'''
     def __init__(self, filename):
         self.filename = filename
         
         try:
             self.con = sqlite3.connect(filename,check_same_thread=False)
-            self.con.row_factory = sqlite3.Row  # ώστε να πάρουμε τα ονόματα των στηλών του πίνακα
+            self.con.row_factory = sqlite3.Row  # so that we can get the names of the table columns
             self.cursor = self.con.cursor()
-            print("Επιτυχής σύνδεση στη βάση δεδομένων", filename)
+            print("Successful connection to the database", filename)
             sqlite_select_Query = "select sqlite_version();"
             self.cursor.execute(sqlite_select_Query)
             record = self.cursor.fetchall()
@@ -1217,14 +1219,14 @@ class DataModel():
             for rec in record:
                 print("SQLite Database Version is: ", rec[0])
         except sqlite3.Error as error:
-            print("Σφάλμα σύνδεσης στη βάση δεδομένων sqlite", error)
+            print("Error connecting to sqlite database", error)
     
     def close(self):
         self.con.commit()
         self.con.close()
 
     
-    #Εκτέλεση SQL ερωτήματος που επιστρέφει τα αποτελέσματα σε λίστα
+    #Execute a SQL query that returns results in a list
     def executeSQL(self, query):
         try:
             t1 = time.perf_counter()
@@ -1235,7 +1237,7 @@ class DataModel():
 
                     sql_time = time.perf_counter() - t1
                     #print(f'εκτέλεση εντολής {statement[:40]}... σε {sql_time:.5f} sec')
-                    print("Η εντολή SQL εκτελέστηκε με επιτυχία")
+                    print("The SQL command was executed successfully.")
                 results = []
 
             #epistrefoume ta results
@@ -1245,10 +1247,10 @@ class DataModel():
               
                     
         except sqlite3.Error as error:
-            print(f"Σφάλμα εκτέλεσης εντολής SQL", error)
+            print(f"SQL command execution error", error)
             return False
 
-    #Εκτέλεση SQL ερωτήματος που επιστρέφει τα αποτελέσματα σε λεξικό
+    #Execute a SQL query that returns results in a dictionary
     def executeSQLdict(self, query):
         try:
             t1 = time.perf_counter()
@@ -1257,31 +1259,31 @@ class DataModel():
                     self.cursor.execute(statement)
                     sql_time = time.perf_counter() -t1
                     #print(f'εκτέλεση εντολής {statement[:40]}... σε {sql_time:.5f} sec')
-                    print("Η εντολή SQL εκτελέστηκε με επιτυχία")
+                    print("The SQL command was executed successfully.")
             self.con.commit()
             return self.getQueryData()
               
                     
         except sqlite3.Error as error:
-            print(f"Σφάλμα εκτέλεσης εντολής SQL", error)
+            print(f"SQL command execution error", error)
             return False
 
     
     #Εισαγωγή εγγραφής σε μορφή λεξικού σε πίνακα
     def _insertIntoTable(self, table, row_dict):
-        ''' Εισαγωγή εγγραφής σε μορφή λεξικού σε πίνακα'''
+        '''Insert a record in dictionary format into a table'''
         try:
             query_param = f"""INSERT INTO {table} ({",".join(row_dict.keys())}) VALUES ({", ".join((len(row_dict)-1) * ["?"])}, ?);"""
             data = tuple(row_dict.values())
             self.cursor.execute(query_param, data)
             self.con.commit()
-            print("Η εισαγωγή ολοκληρώθηκε")
+            print("Import completed.")
             return True
         except sqlite3.Error as error:
-            print(f"Σφάλμα εισαγωγής στοιχείων στον πίνακα {table}", error)
+            print(f"Error inserting data into the table {table}", error)
             return False
 
-    #Εκτέλεση παραμετρικού query
+    #Execute a parametric query
     def executeSQLparam(self,query,data):
         try:
             self.cursor.execute(query,data)
@@ -1290,11 +1292,11 @@ class DataModel():
             for row in records:
                 results.append(dict(row))
             self.con.commit()
-            print("Η εντολή SQL εκτελέστηκε με επιτυχία")
+            print("The SQL command was executed successfully.")
             return results
         
         except sqlite3.Error as error:
-            print(f"Σφάλμα εκτέλεσης εντολής SQL", error)
+            print(f"SQL command execution error", error)
             return False
             
 
