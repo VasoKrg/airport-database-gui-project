@@ -50,7 +50,7 @@ SELECT AVG(delay) FROM flight WHERE year = 2021;
 SELECT destination_city, COUNT(*) FROM flight GROUP BY destination_city ORDER BY COUNT(*) DESC LIMIT 3;
 ```
 
-![Stats Screenshot](image.png)
+<img src="image.png" width="600"/>
 
 ## Built By
 Vasiliki Karagiannidi 
