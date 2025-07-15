@@ -55,7 +55,7 @@ Vasiliki Karagiannidi
 
 Aliki Panou
 
-Developed as part of the University of Patras – Electrical & Computer Engineering
+Developed as part of the Database course (year 2022) at University of Patras – Electrical & Computer Engineering
 
 ## Requirements
 Python 3.5+
